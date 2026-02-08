@@ -6,14 +6,18 @@ interface StatsBarProps {
   threatCount: number;
 }
 
-const StatsBar = ({ submissionCount, analyzedCount, threatCount }: StatsBarProps) => {
-  const pendingCount = submissionCount - analyzedCount;
+const StatsBar = ({ submissionCount = 0, analyzedCount = 0, threatCount = 0 }: StatsBarProps) => {
+  const safeSubmitted = submissionCount || 0;
+  const safeAnalyzed = analyzedCount || 0;
+  const safeThreat = threatCount || 0;
+  const pendingCount = safeSubmitted - safeAnalyzed;
+  const clearedCount = Math.max(0, safeAnalyzed - safeThreat);
 
   const dynamicStats = [
-    { label: "Cases Submitted", value: submissionCount.toString(), icon: Search, color: "text-primary" },
-    { label: "Threats Detected", value: threatCount.toString(), icon: AlertTriangle, color: "text-destructive" },
-    { label: "Cleared", value: (analyzedCount - threatCount).toString(), icon: Shield, color: "text-success" },
-    { label: "Pending", value: pendingCount.toString(), icon: Activity, color: "text-warning" },
+    { label: "Cases Submitted", value: String(safeSubmitted), icon: Search, color: "text-primary" },
+    { label: "Threats Detected", value: String(safeThreat), icon: AlertTriangle, color: "text-destructive" },
+    { label: "Cleared", value: String(clearedCount), icon: Shield, color: "text-success" },
+    { label: "Pending", value: String(pendingCount), icon: Activity, color: "text-warning" },
   ];
 
   return (

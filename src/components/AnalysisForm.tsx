@@ -51,18 +51,26 @@ const AnalysisForm = ({ onResult }: AnalysisFormProps) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          mode: "no-cors",
           body: JSON.stringify(payload),
         }
       );
 
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+
+      const analysisResult = await response.json();
+
       toast({
-        title: "Analysis Sent",
-        description:
-          "Request submitted to GuardPaw AI. Check your n8n workflow for results.",
+        title: "Analysis Complete",
+        description: "GuardPaw AI has completed the forensic review.",
       });
 
-      onResult(payload);
+      onResult({
+        ...payload,
+        result: analysisResult,
+        status: "complete",
+      });
     } catch (error) {
       console.error("Webhook error:", error);
       toast({

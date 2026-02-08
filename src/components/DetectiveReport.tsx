@@ -37,20 +37,33 @@ const getRiskConfig = (level: string) => {
   };
 };
 
+// Extract a readable string from a value that might be a string, an object with a description, or nested
+const toText = (value: unknown): string => {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object" && "description" in value) {
+    return String((value as Record<string, unknown>).description);
+  }
+  return String(value ?? "");
+};
+
 const toArray = (value: unknown): string[] => {
-  if (Array.isArray(value)) return value;
-  if (typeof value === "string" && value.trim()) {
-    // Handle comma-separated or newline-separated strings
-    return value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+  if (Array.isArray(value)) return value.map(toText).filter(Boolean);
+  // If it's an object with a description (e.g. { type: "string", description: "..." })
+  const text = toText(value);
+  if (text) {
+    // Split bullet points (•) or newlines into separate items
+    const items = text.split(/(?:^|\n)\s*•\s*/);
+    return items.map((s) => s.trim()).filter(Boolean);
   }
   return [];
 };
 
 const DetectiveReport = ({ result }: DetectiveReportProps) => {
-  const risk = getRiskConfig(result.risk_level);
+  const risk = getRiskConfig(toText(result.risk_level));
   const RiskIcon = risk.icon;
   const redFlags = toArray(result.red_flags);
   const matchedPatterns = toArray(result.matched_patterns);
+  const recommendation = toText(result.recommendation);
 
   return (
     <div className="space-y-4 pt-3 border-t border-border/50">
@@ -108,14 +121,14 @@ const DetectiveReport = ({ result }: DetectiveReportProps) => {
       )}
 
       {/* Recommendation */}
-      {result.recommendation && (
+      {recommendation && (
         <div className="space-y-1.5">
           <h4 className="text-xs font-semibold text-success flex items-center gap-1.5">
             <CheckCircle size={12} />
             Recommendation
           </h4>
           <p className="text-xs text-secondary-foreground leading-relaxed pl-1">
-            {result.recommendation}
+            {recommendation}
           </p>
         </div>
       )}

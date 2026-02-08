@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { normalizeResponse } from "@/lib/normalizeResponse";
 import { Send, Link, FileText, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +60,12 @@ const AnalysisForm = ({ onResult }: AnalysisFormProps) => {
         throw new Error(`Server responded with ${response.status}`);
       }
 
-      const analysisResult = await response.json();
+      const rawResult = await response.json();
+      console.log("RAW n8n response:", JSON.stringify(rawResult, null, 2));
+
+      // Normalize: n8n may return a JSON Schema-like structure where each field is { type, description }
+      // or it may wrap in { properties: { ... } } or { output: { ... } }
+      const analysisResult = normalizeResponse(rawResult);
 
       toast({
         title: "Analysis Complete",

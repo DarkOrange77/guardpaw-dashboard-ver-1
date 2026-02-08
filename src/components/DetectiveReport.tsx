@@ -18,7 +18,6 @@ const getRiskConfig = (level: string) => {
       icon: ShieldX,
       label: "HIGH RISK",
       className: "bg-destructive/10 text-destructive border-destructive/30",
-      barClass: "bg-destructive",
     };
   }
   if (normalized.includes("medium")) {
@@ -26,44 +25,21 @@ const getRiskConfig = (level: string) => {
       icon: ShieldAlert,
       label: "MEDIUM RISK",
       className: "bg-warning/10 text-warning border-warning/30",
-      barClass: "bg-warning",
     };
   }
   return {
     icon: ShieldCheck,
     label: "LOW RISK",
     className: "bg-success/10 text-success border-success/30",
-    barClass: "bg-success",
   };
 };
 
-// Extract a readable string from a value that might be a string, an object with a description, or nested
-const toText = (value: unknown): string => {
-  if (typeof value === "string") return value;
-  if (value && typeof value === "object" && "description" in value) {
-    return String((value as Record<string, unknown>).description);
-  }
-  return String(value ?? "");
-};
-
-const toArray = (value: unknown): string[] => {
-  if (Array.isArray(value)) return value.map(toText).filter(Boolean);
-  // If it's an object with a description (e.g. { type: "string", description: "..." })
-  const text = toText(value);
-  if (text) {
-    // Split bullet points (•) or newlines into separate items
-    const items = text.split(/(?:^|\n)\s*•\s*/);
-    return items.map((s) => s.trim()).filter(Boolean);
-  }
-  return [];
-};
-
 const DetectiveReport = ({ result }: DetectiveReportProps) => {
-  const risk = getRiskConfig(toText(result.risk_level));
+  const risk = getRiskConfig(result.risk_level);
   const RiskIcon = risk.icon;
-  const redFlags = toArray(result.red_flags);
-  const matchedPatterns = toArray(result.matched_patterns);
-  const recommendation = toText(result.recommendation);
+  const redFlags = Array.isArray(result.red_flags) ? result.red_flags : [];
+  const matchedPatterns = Array.isArray(result.matched_patterns) ? result.matched_patterns : [];
+  const recommendation = typeof result.recommendation === "string" ? result.recommendation : "";
 
   return (
     <div className="space-y-4 pt-3 border-t border-border/50">

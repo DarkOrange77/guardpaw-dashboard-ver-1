@@ -37,9 +37,20 @@ const getRiskConfig = (level: string) => {
   };
 };
 
+const toArray = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string" && value.trim()) {
+    // Handle comma-separated or newline-separated strings
+    return value.split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
 const DetectiveReport = ({ result }: DetectiveReportProps) => {
   const risk = getRiskConfig(result.risk_level);
   const RiskIcon = risk.icon;
+  const redFlags = toArray(result.red_flags);
+  const matchedPatterns = toArray(result.matched_patterns);
 
   return (
     <div className="space-y-4 pt-3 border-t border-border/50">
@@ -55,14 +66,14 @@ const DetectiveReport = ({ result }: DetectiveReportProps) => {
       </div>
 
       {/* Red Flags */}
-      {result.red_flags && result.red_flags.length > 0 && (
+      {redFlags.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-xs font-semibold text-destructive flex items-center gap-1.5">
             <AlertTriangle size={12} />
-            Red Flags ({result.red_flags.length})
+            Red Flags ({redFlags.length})
           </h4>
           <ul className="space-y-1">
-            {result.red_flags.map((flag, i) => (
+            {redFlags.map((flag, i) => (
               <li
                 key={i}
                 className="text-xs text-secondary-foreground flex items-start gap-2 pl-1"
@@ -76,14 +87,14 @@ const DetectiveReport = ({ result }: DetectiveReportProps) => {
       )}
 
       {/* Matched Patterns */}
-      {result.matched_patterns && result.matched_patterns.length > 0 && (
+      {matchedPatterns.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-xs font-semibold text-warning flex items-center gap-1.5">
             <Target size={12} />
-            Matched Patterns ({result.matched_patterns.length})
+            Matched Patterns ({matchedPatterns.length})
           </h4>
           <ul className="space-y-1">
-            {result.matched_patterns.map((pattern, i) => (
+            {matchedPatterns.map((pattern, i) => (
               <li
                 key={i}
                 className="text-xs text-secondary-foreground flex items-start gap-2 pl-1"

@@ -42,7 +42,11 @@ const Index = () => {
         </section>
 
         {/* Stats */}
-        <StatsBar submissionCount={submissions.length} />
+        <StatsBar
+          submissionCount={submissions.length}
+          analyzedCount={submissions.filter((s) => s.status === "complete").length}
+          threatCount={submissions.filter((s) => s.result?.risk_level?.toLowerCase().includes("high")).length}
+        />
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-5 gap-8">

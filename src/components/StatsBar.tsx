@@ -1,22 +1,19 @@
 import { Shield, Activity, AlertTriangle, Search } from "lucide-react";
 
-const stats = [
-  { label: "Cases Submitted", value: "0", icon: Search, color: "text-primary" },
-  { label: "Threats Detected", value: "0", icon: AlertTriangle, color: "text-destructive" },
-  { label: "Cleared", value: "0", icon: Shield, color: "text-success" },
-  { label: "Pending", value: "0", icon: Activity, color: "text-warning" },
-];
-
 interface StatsBarProps {
   submissionCount: number;
+  analyzedCount: number;
+  threatCount: number;
 }
 
-const StatsBar = ({ submissionCount }: StatsBarProps) => {
+const StatsBar = ({ submissionCount, analyzedCount, threatCount }: StatsBarProps) => {
+  const pendingCount = submissionCount - analyzedCount;
+
   const dynamicStats = [
-    { ...stats[0], value: submissionCount.toString() },
-    stats[1],
-    stats[2],
-    { ...stats[3], value: submissionCount.toString() },
+    { label: "Cases Submitted", value: submissionCount.toString(), icon: Search, color: "text-primary" },
+    { label: "Threats Detected", value: threatCount.toString(), icon: AlertTriangle, color: "text-destructive" },
+    { label: "Cleared", value: (analyzedCount - threatCount).toString(), icon: Shield, color: "text-success" },
+    { label: "Pending", value: pendingCount.toString(), icon: Activity, color: "text-warning" },
   ];
 
   return (

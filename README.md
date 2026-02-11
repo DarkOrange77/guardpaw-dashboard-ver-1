@@ -1,56 +1,48 @@
-# Welcome to your Lovable project
+🛡️ GuardPaw Frontend
+The UI for AI-Powered Animal Rescue Fraud Detection
+GuardPaw is a modern, high-fidelity web application designed to expose fraudulent animal rescue fundraisers. This repository contains the frontend code built with Lovable, featuring a real-time "Analysis Queue" and a forensic reporting dashboard.
 
-## Project info
+<img width="1603" height="908" alt="image" src="https://github.com/user-attachments/assets/3f81edb6-e9f5-46c8-b86d-c987bc60f321" />
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-## How can I edit this code?
+✨ Key Features
+Forensic Analysis Form: A streamlined input for fundraiser URLs and descriptions with a custom "Analysis Tone" selector.
 
-There are several ways of editing your application.
+Real-time Stats Dashboard:
 
-**Use Lovable**
+Cases Submitted: Total count of forensic reviews.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Threats Detected: Number of verified high-risk cases.
 
-Changes made via Lovable will be committed automatically to this repo.
+Cleared: Legitimate fundraisers verified by AI.
 
-**Use your preferred IDE**
+The Analysis Queue: A vertical timeline view showing active and past investigations.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Detective Reports: Detailed results cards featuring:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Risk Level Badge: Visual indicator (High/Medium/Low).
 
-Follow these steps:
+Red Flags List: Specific extracted triggers (e.g., emotional blackmail, suspicious payment methods).
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Pattern Matching: Identifies classic scam signatures.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Actionable Recommendations: Expert advice on how to proceed.
 
-# Step 3: Install the necessary dependencies.
-npm i
+🎨 Design System
+The UI follows a "Forensic Dark" theme:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Primary Color: #F59E0B (Amber/Orange) for high-visibility actions.
 
-**Edit a file directly in GitHub**
+Background: #0F172A (Slate Dark) for a professional, focused atmosphere.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Typography: Clean sans-serif hierarchy to ensure complex forensic data is readable at a glance.
 
-**Use GitHub Codespaces**
+⚙️ Technical Architecture
+Framework: React + Vite (via Lovable)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+State Management: Real-time synchronization with Supabase.
 
-## What technologies are used for this project?
+Backend Integration: Triggers complex n8n workflows via secure webhooks.
 
 This project is built with:
 
@@ -60,14 +52,38 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+🚀 Quick Start
+Clone the Repo:
 
-## Can I connect a custom domain to my Lovable project?
+Bash
 
-Yes, you can!
+git clone https://github.com/your-username/guardpaw-frontend.git
+Install Dependencies:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Bash
+
+npm install
+Environment Variables: Create a .env file and add your Supabase credentials:
+
+Code snippet
+
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+Run Locally:
+
+Bash
+
+npm run dev
+
+Connection to GuardPaw "Brain" (n8n)
+
+This frontend is designed to work in tandem with the GuardPaw n8n workflow. When a user clicks "Analyze Fundraiser", the following happens:
+
+A new record is created in Supabase.
+
+A webhook is sent to n8n with the id, description, and tone.
+
+The UI listens for the n8n update via Supabase Realtime and automatically pops the "Detective Report" into the queue once processing is complete.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

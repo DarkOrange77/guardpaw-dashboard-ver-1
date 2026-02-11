@@ -1,4 +1,5 @@
-🛡️ GuardPaw Frontend
+####🛡️ GuardPaw Frontend
+
 The UI for AI-Powered Animal Rescue Fraud Detection
 GuardPaw is a modern, high-fidelity web application designed to expose fraudulent animal rescue fundraisers. This repository contains the frontend code built with Lovable, featuring a real-time "Analysis Queue" and a forensic reporting dashboard.
 

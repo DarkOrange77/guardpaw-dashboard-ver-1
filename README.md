@@ -76,3 +76,6 @@ This frontend is designed to work in tandem with the GuardPaw n8n workflow. When
 1. A webhook is sent to n8n with the id, description, and tone.
 2. A new record is created in Supabase.
 3. The UI listens for the n8n update via Supabase Realtime and automatically pops the "Detective Report" into the queue once processing is complete.
+
+
+currently the n8n flow is depreciated 
